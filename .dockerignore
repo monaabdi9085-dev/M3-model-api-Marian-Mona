@@ -1,0 +1,23 @@
+# Virtual environment
+.venv/
+.env
+
+# Git
+.git/
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+
+# Local artifacts /optional if model added later
+*.pt
+*.pth
