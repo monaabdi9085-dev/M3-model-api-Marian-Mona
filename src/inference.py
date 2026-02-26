@@ -25,6 +25,18 @@ def preprocess(image):
 
 
 def predict_from_torchscript(ts_model, image):
+    """
+    Runs inference using a TorchScript model.
+
+    Args:
+    ts_model: Loaded TorchScript model.
+    image: Nested list wiht shape (3, 32, 32).
+
+    Returns:
+    pred_class (int): Predicted class index.
+    probabilities (lis[float]): Softmax probabilities.
+    """
+
     ts_model.eval()
 
     x = preprocess(image)
