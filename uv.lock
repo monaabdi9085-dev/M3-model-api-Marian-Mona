@@ -167,7 +167,6 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
-    { name = "torch" },
     { name = "torchvision" },
     { name = "uvicorn" },
 ]
@@ -175,7 +174,6 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.133.0" },
-    { name = "torch", specifier = ">=2.10.0" },
     { name = "torchvision", specifier = ">=0.25.0" },
     { name = "uvicorn", specifier = ">=0.41.0" },
 ]
