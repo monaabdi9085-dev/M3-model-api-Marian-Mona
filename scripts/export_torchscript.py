@@ -10,7 +10,8 @@ def export_torchscript() -> str:
     weights_path = Path("artifacts/model_state_dict.pt")
     if not weights_path.exists():
         raise FileNotFoundError(
-            "Missing artifacts/model_state_dict.pt. Run: uv run python -m src.train"
+            "Model weights not found at 'artifacts/model_state_dict.pt'."
+            "Please run: uv run python -m src.train before exporting."
         )
 
     model = TinyCNN()
