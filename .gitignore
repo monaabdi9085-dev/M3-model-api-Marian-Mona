@@ -207,6 +207,18 @@ marimo/_lsp/
 __marimo__/
 
 
-# artifacts
+
+
+# artifacts (keep folder, ignore generated files)
 artifacts/*
-! artifacts/.gitkeep
+!artifacts/.gitkeep
+
+# datasets
+data/
+
+# python
+__pycache__/
+.venv/
+*.pt
+*.onnx
+>>>>>>> ce8e21140d17d12bf434df27ff67785bf7bf896c

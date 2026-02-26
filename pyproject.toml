@@ -1,11 +1,13 @@
 [project]
 name = "m3-model-api-marian-mona"
 version = "0.1.0"
-description = "Add your description here"
+description = "Model API for CIFAR-10 inference using FastAPI and TorchScript"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
+
 dependencies = [
     "fastapi>=0.133.0",
-    "torch>=2.10.0",
     "uvicorn>=0.41.0",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0"
 ]

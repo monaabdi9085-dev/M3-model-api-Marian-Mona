@@ -10,5 +10,3 @@ class PredictResponse(BaseModel):
     model_version: Optional[str] = None
 
 
-
-   
