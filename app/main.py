@@ -59,6 +59,13 @@ def to_model_tensor(image) -> torch.Tensor:
 @app.post("/predict", response_model=PredictResponse)
 def predict(receipt: PredictRequest):
     try:
+        # Validate spatial dimensions (H=W=32)
+        if len(receipt.image[0]) != 32 or len(receipt.image[0][0]) != 32:
+            raise HTTPException(
+                status_code=422,
+                detail="Input image must have spatial dimensions 32x32."
+            )
+
         if model is not None:
             input_tensor = to_model_tensor(receipt.image)
 
@@ -77,6 +84,7 @@ def predict(receipt: PredictRequest):
             probabilities=probabilities_list,
             model_version=MODEL_VERSION
         )
+
     except HTTPException:
         raise
     except Exception as e:
