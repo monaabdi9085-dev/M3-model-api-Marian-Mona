@@ -22,6 +22,11 @@ Contanerization using Docker
 
 Model inference executed at application startup
 
+## API TESTING
+
+The /health endpoint was tested to verify that the application starts correctly.
+
+The /predict endpoint was tested using a properly formatted CIFAR-10 tensor (3x32x32 JSON input). The API successfully returned a predicted class, probability distribution, and model version, confirming correct TorchScript model loading and inference integration.
 
 # CODE REVIEW 
 PR #1 – Model Export
