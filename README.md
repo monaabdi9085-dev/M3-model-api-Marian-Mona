@@ -23,6 +23,28 @@ Containerization using Docker
 
 Model inference executed at application startup
 
+## Marian – ML Pipeline & Model Distribution
+Responsible for the machine learning pipeline and model distribution:
+
+Designed and trained the TinyCNN model
+Implemented TorchScript export workflow
+Ensured reproducible model loading via artifact management
+Integrated exported model with FastAPI lifecycle (startup loading)
+Verified containerized inference with Docker volume mounting
+Debugged integration issues between model architecture and API input handling
+
+## Mona – Application Foundation & API Integration
+Responsible for application foundation and API integration:
+
+Designed and implemented the application structure using FastAPI  
+Developed the /health and /predict endpoints  
+Managed JSON-to-tensor transformation for CIFAR-10 input data  
+Integrated the TorchScript model into the inference pipeline  
+Implemented mock-mode fallback when no model artifact is mounted  
+Configured dependency management using uv  
+Designed and built the Dockerfile for containerized deployment  
+Tested API endpoints and verified end-to-end inference functionality  
+
 ## API TESTING
 
 The /health endpoint was tested to verify that the application starts correctly.
