@@ -46,10 +46,22 @@ Designed and built the Dockerfile for containerized deployment
 Tested API endpoints and verified end-to-end inference functionality  
 
 ## API TESTING
-
+## Input format
+The /predict endpoint expects a CIFAR-10 formatted image with shape (32, 32, 3) in HWC format (Height, Width, Channels).
+Example below 
+{
+  "image": [
+    [[0,0,0],[0,0,0],[0,0,0]],
+    [[0,0,0],[0,0,0],[0,0,0]],
+    [[0,0,0],[0,0,0],[0,0,0]]
+  ]
+}
+Note: The real input must contain 32 rows × 32 columns × 3 color channels.
+### Endpoint testing 
 The /health endpoint was tested to verify that the application starts correctly.
 
 The /predict endpoint was tested using a properly formatted CIFAR-10 tensor (32x32 spatial dimensions JSON input). The API successfully returned a predicted class, probability distribution, and model version, confirming correct TorchScript model loading and inference integration.
+
 
 ## CODE REVIEW
 PR #1 – Model Export
@@ -60,13 +72,13 @@ PR #2 – API + Docker
 
 https://github.com/monaabdi9085-dev/M3-model-api-Marian-Mona/pull/2
 
-Run locally
+## Run locally
 
 uv run python -m src.train
 uv run python -m scripts.export_torchscript
 uv run uvicorn app.main:app --reload
 
-Run with Docker (real model)
+## Run with Docker (real model)
 
 docker build -t m3-api .
 docker run -p 8000:8000 -v "$(pwd)/artifacts:/app/artifacts" m3-api
@@ -77,6 +89,6 @@ If no TorchScript artifact is mounted, the API runs in mock mode.
 
 ## Reflection
 
-The highlights of this project were the opportunity to mimic real-life development workflows by using pull requests and providing structured feedback to each other.
+A highlights of this project were the opportunity to mimic real-life development workflows by using pull requests and providing structured feedback to each other.
 
 One of the main challenges was coordinating our individual parts to avoid conflicts, which reflects common challenges in real-world collaborative software development.
