@@ -34,58 +34,27 @@ def health():
 
 
 def to_model_tensor(image) -> torch.Tensor:
+    """
+    Accepts ONLY HWC image with shape [32][32][3].
+    Converts to tensor shape [1, 3, 32, 32] for the model.
+    """
     x = torch.tensor(image, dtype=torch.float32)
 
-    if x.ndim == 3 and x.shape[2] == 3:
-        x = x.permute(2, 0, 1)
-
-    if x.ndim == 2:
-        x = x.unsqueeze(0).repeat(3, 1, 1)
-
-    if not (x.ndim == 3 and x.shape[0] == 3):
+    # Validate HWC shape
+    if not (x.ndim == 3 and x.shape[0] == 32 and x.shape[1] == 32 and x.shape[2] == 3):
         raise HTTPException(
             status_code=422,
-            detail=f"Bad image tensor shape {tuple(x.shape)}. Expected [H,W,3] or [3,H,W] or [H,W]."
+            detail=(
+                f"Invalid image shape {tuple(x.shape)}. "
+                "Expected HWC format with shape (32, 32, 3)."
+            ),
         )
 
-    x = x.unsqueeze(0)
-
+    # Normalize 0-255 -> 0-1 if needed
     if x.numel() > 0 and x.max() > 1.5:
         x = x / 255.0
 
+    # HWC -> CHW and add batch dim
+    x = x.permute(2, 0, 1).unsqueeze(0)  # [1,3,32,32]
     return x
 
-
-@app.post("/predict", response_model=PredictResponse)
-def predict(receipt: PredictRequest):
-    try:
-        # Validate spatial dimensions (H=W=32)
-        if len(receipt.image[0]) != 32 or len(receipt.image[0][0]) != 32:
-            raise HTTPException(
-                status_code=422,
-                detail="Input image must have spatial dimensions 32x32."
-            )
-
-        if model is not None:
-            input_tensor = to_model_tensor(receipt.image)
-
-            with torch.no_grad():
-                output = model(input_tensor)
-
-            probabilities = torch.softmax(output, dim=1)
-            predicted_class = torch.argmax(probabilities, dim=1).item()
-            probabilities_list = probabilities.squeeze().tolist()
-        else:
-            predicted_class = mock_predict(receipt.image)
-            probabilities_list = None
-
-        return PredictResponse(
-            predicted_class=predicted_class,
-            probabilities=probabilities_list,
-            model_version=MODEL_VERSION
-        )
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
