@@ -20,7 +20,6 @@ async def lifespan(app: FastAPI):
         model = None
     yield
 
-
 app = FastAPI(title="M3 Model API", lifespan=lifespan)
 
 
@@ -58,3 +57,32 @@ def to_model_tensor(image) -> torch.Tensor:
     x = x.permute(2, 0, 1).unsqueeze(0)  # [1,3,32,32]
     return x
 
+@app.post("/predict", response_model=PredictResponse)
+def predict(receipt: PredictRequest) -> PredictResponse:
+    try:
+        if model is None:
+            predicted_class = mock_predict(receipt.image)
+            return PredictResponse(
+                predicted_class=predicted_class,
+                probabilities=None,
+                model_version=MODEL_VERSION,
+            )
+
+        input_tensor = to_model_tensor(receipt.image)  # -> [1, 3, 32, 32]
+
+        with torch.no_grad():
+            output = model(input_tensor)  # -> [1, 10]
+
+        probabilities = torch.softmax(output, dim=1).squeeze(0)  # -> [10]
+        predicted_class = int(torch.argmax(probabilities).item())
+
+        return PredictResponse(
+            predicted_class=predicted_class,
+            probabilities=[float(p) for p in probabilities.tolist()],
+            model_version=MODEL_VERSION,
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
